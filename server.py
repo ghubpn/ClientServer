@@ -17,20 +17,33 @@ while True:
     print >> sys.stderr, 'waiting for a connection'
     connection, client_address = sock.accept()
 
-    try:
-        print >> sys.stderr, 'connection from', client_address
+    while True:
 
-        # receive the data in small chunks and retransmit it
-        while True:
-            data = connection.recv(16)
-            print >> sys.stderr, 'received "%s"' % data
-            if data:
-                print >> sys.stderr, 'send data back to the client'
-                connection.sendall(data)
-            else:
-                print >> sys.stderr, 'no more data from', client_address
-                break
+        try:
+            print >> sys.stderr, 'connection from', client_address
 
-    finally:
-        # clean up the connection
-        connection.close()
+            # receive the data in small chunks and retransmit it
+            while True:
+                selection = connection.recv(1)
+                print >> sys.stderr, 'received "%s"' % selection
+                if selection == '1':
+                    message = 'showing contents of current directory:'
+                    connection.sendall(message)
+                elif selection == '2':
+                    message = 'select a file to send to server:'
+                    connection.sendall(message)
+                elif selection == '3':
+                    message = 'select a file to retrieve from server:'
+                    connection.sendall(message)
+                elif selection == '4':
+                    message = 'select a directory to move to:'
+                    connection.sendall(message)
+                elif selection == '5':
+                    message = 'select a directory to make:'
+                    connection.sendall(message)
+                else:
+                    break
+
+        finally:
+            # clean up the connection
+            connection.close()

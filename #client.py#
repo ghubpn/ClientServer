@@ -26,6 +26,7 @@ while True:
         # look for the response
         message = sock.recv(64)
         print >> sys.stderr, '%s' % message
+        
 
     finally:
         print >> sys.stderr, 'closing socket'
